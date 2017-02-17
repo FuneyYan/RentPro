@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lz.mapper.UserMapper">
+
+    <select id="findByUserName" resultType="User">
+        SELECT * FROM t_account WHERE username=#{username}
+    </select>
+
+    <select id="findById" resultMap="UserMap">
+        select t_account.*,t_role.id as roleid,t_role.rolename,t_role.viewname from t_account
+      left join t_user_role on t_account.id = t_user_role.userid
+      LEFT JOIN t_role on t_user_role.roleid = t_role.id WHERE t_account.id=#{id}
+    </select>
+
+    <select id="findAll" resultMap="UserMap">
+      select t_account.*,t_role.id as roleid,t_role.rolename,t_role.viewname from t_account
+    left join t_user_role on t_account.id = t_user_role.userid
+    LEFT JOIN t_role on t_user_role.roleid = t_role.id
+    </select>
+
+    <select id="countByParam" resultType="java.lang.Long">
+      SELECT count(*) FROM t_account
+        <if test="queryRole!=null and queryRole!=''">
+            INNER JOIN t_user_role ON t_account.id = t_user_role.userid
+        </if>
+      <where>
+          <if test="queryName !=null and queryName!=''" >
+              username LIKE concat('%',#{queryName},'%')
+          </if>
+          <if test="queryRole!=null and queryRole!=''">
+              and t_user_role.roleid=#{queryRole}
+          </if>
+      </where>
+    </select>
+
+    <select id="findByPageAndParam" resultMap="UserMapN1">
+        SELECT * FROM t_account
+        <if test="queryRole!=null and queryRole!=''">
+            INNER JOIN t_user_role ON t_account.id = t_user_role.userid
+        </if>
+        <where>
+            <if test="queryName !=null and queryName!=''" >
+                username LIKE concat('%',#{queryName},'%')
+            </if>
+            <if test="queryRole!=null and queryRole!=''">
+                and t_user_role.roleid=#{queryRole}
+            </if>
+        </where>
+        limit ${start},${pageSize}
+    </select>
+
+    <resultMap id="UserMapN1" type="User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <collection property="roleList" ofType="Role"
+                    column="id" select="com.lz.mapper.RoleMapper.findByUserId"/>
+    </resultMap>
+
+    <resultMap id="UserMap" type="User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <collection property="roleList" ofType="Role">
+            <id column="roleid" property="id"/>
+            <result column="rolename" property="rolename"/>
+            <result column="viewname" property="viewname"/>
+        </collection>
+    </resultMap>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_account(username,password) VALUES (#{username},#{password})
+    </insert>
+
+    <delete id="del">
+        DELETE FROM t_account WHERE id=#{id}
+    </delete>
+
+    <update id="update">
+        UPDATE t_account
+        <set>
+          username=#{username},
+            <if test="password!=null and password!=''">
+                password=#{password}
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+</mapper>

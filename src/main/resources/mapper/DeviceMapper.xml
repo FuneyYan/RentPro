@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lz.mapper.DeviceMapper">
+    <select id="findAll" resultType="Device">
+        SELECT * FROM t_device
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT count(*) FROM t_device
+    </select>
+    <select id="findDeviceBySearchParam" resultType="Device">
+        SELECT * FROM t_device
+        <where>
+            <if test="deviceName != null and deviceName != ''">
+                name like concat('%',#{deviceName},'%')
+            </if>
+        </where>
+        <if test="orderType != null and orderType != '' and orderColumn != null and orderColumn != ''">
+            ORDER BY ${orderColumn} ${orderType}
+        </if>
+        limit ${start},${length}
+    </select>
+    <select id="filterCount" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM t_device
+        <where>
+            <if test="deviceName != null and deviceName != ''">
+                name like concat('%',#{deviceName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findByDeviceId" resultType="Device">
+        SELECT * FROM t_device WHERE id=#{id}
+    </select>
+
+    <insert id="addNewDevice">
+        INSERT INTO t_device(name,unit,totalnum,currentnum,price)
+         VALUES (#{name},#{unit},#{totalnum},#{currentnum},#{price})
+    </insert>
+</mapper>
