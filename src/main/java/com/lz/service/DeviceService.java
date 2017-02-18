@@ -2,6 +2,9 @@ package com.lz.service;
 
 import com.lz.dto.DeviceRentDto;
 import com.lz.pojo.Device;
+import com.lz.pojo.DeviceRent;
+import com.lz.pojo.DeviceRentDetail;
+import com.lz.pojo.DeviceRentDoc;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -22,4 +25,9 @@ public interface DeviceService {
 
     String saveRent(DeviceRentDto deviceRentDto);
 
+    DeviceRent findDeviceRentBySerialNumber(String serialNumber);
+
+    List<DeviceRentDetail> findDeviceDetailListByRentId(Integer id);
+
+    List<DeviceRentDoc> findDeviceDocListByRentId(Integer id);
 }

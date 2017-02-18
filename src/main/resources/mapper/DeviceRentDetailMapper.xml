@@ -10,4 +10,8 @@
       (#{obj.devicename},#{obj.deviceunit},#{obj.deviceprice},#{obj.num},#{obj.totalprice},#{obj.rentid})
     </foreach>
   </insert>
+
+  <select id="findDeviceDetailListByRentId" resultType="DeviceRentDetail">
+      SELECT * FROM t_devicerentdetail WHERE rentid=#{id}
+  </select>
 </mapper>

@@ -14,4 +14,8 @@
         UPDATE  t_devicerent SET precost=#{precost},
         lastcost=#{lastcost},totalprice=#{total} WHERE id=#{id}
     </update>
+
+    <select id="findDeviceRentBySerial" resultType="DeviceRent">
+        SELECT * FROM t_devicerent WHERE serialnumber=#{id}
+    </select>
 </mapper>

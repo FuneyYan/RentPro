@@ -2,15 +2,16 @@ package com.lz.controller;
 
 import com.lz.dto.DeviceRentDto;
 import com.lz.dto.RenderJson;
+import com.lz.exception.NotFoundException;
 import com.lz.pojo.Device;
+import com.lz.pojo.DeviceRent;
+import com.lz.pojo.DeviceRentDetail;
+import com.lz.pojo.DeviceRentDoc;
 import com.lz.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -51,6 +52,22 @@ public class DeviceRentController {
 
         RenderJson renderJson=new RenderJson(serialNumber);
         return renderJson;
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/{serialNumber:\\d+}")
+    public String showDeviceRent(@PathVariable String serialNumber,Model model){
+        DeviceRent deviceRent=deviceService.findDeviceRentBySerialNumber(serialNumber);
+        if(deviceRent==null){
+            throw new NotFoundException();
+        }else{
+            List<DeviceRentDetail> rentDetailList=deviceService.findDeviceDetailListByRentId(deviceRent.getId());
+            List<DeviceRentDoc> rentDocList=deviceService.findDeviceDocListByRentId(deviceRent.getId());
+
+            model.addAttribute("rentDetailList",rentDetailList);
+            model.addAttribute("rentDocList",rentDocList);
+            model.addAttribute("deviceRent",deviceRent);
+            return "device/rent/show";
+        }
     }
 
 }

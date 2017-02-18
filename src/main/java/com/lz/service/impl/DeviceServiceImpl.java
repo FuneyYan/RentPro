@@ -127,4 +127,19 @@ public class DeviceServiceImpl implements DeviceService {
 
         return deviceRent.getSerialnumber();
     }
+
+    @Override
+    public DeviceRent findDeviceRentBySerialNumber(String serialNumber) {
+        return rentMapper.findDeviceRentBySerial(serialNumber);
+    }
+
+    @Override
+    public List<DeviceRentDetail> findDeviceDetailListByRentId(Integer id) {
+        return detailMapper.findDeviceDetailListByRentId(id);
+    }
+
+    @Override
+    public List<DeviceRentDoc> findDeviceDocListByRentId(Integer id) {
+        return docMapper.findDeviceDocListByRentId(id);
+    }
 }

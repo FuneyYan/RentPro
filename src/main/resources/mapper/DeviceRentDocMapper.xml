@@ -9,4 +9,8 @@
           (#{obj.filename},#{obj.sourcename},#{obj.rentid})
         </foreach>
     </insert>
+
+    <select id="findDeviceDocListByRentId" resultType="DeviceRentDoc">
+        SELECT * FROM t_devicerentdoc WHERE rentid=#{id}
+    </select>
 </mapper>
