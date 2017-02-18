@@ -8,6 +8,7 @@ public class RenderJson {
     private Object data;
     private String message;
 
+
     public RenderJson(Object data){
         this.data=data;
         this.status=SUCCESS;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lz.mapper.DeviceRentMapper">
+    <insert id="save" keyProperty="id" useGeneratedKeys="true">
+      INSERT INTO t_devicerent
+      (companyname, linkman, cardnum, tel, address, fax, rentdate, backdate,
+      totalday, totalprice, precost, lastcost, createuser,serialnumber)
+      VALUES (#{companyname},#{linkman},#{cardnum},#{tel},#{address},#{fax},#{rentdate},
+      #{backdate},#{totalday},#{totalprice},#{precost},#{lastcost},#{createuser},#{serialnumber})
+    </insert>
+
+    <update id="update">
+        UPDATE  t_devicerent SET precost=#{precost},
+        lastcost=#{lastcost},totalprice=#{total} WHERE id=#{id}
+    </update>
+</mapper>

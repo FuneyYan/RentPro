@@ -1,6 +1,8 @@
 package com.lz.mapper;
 
+import com.lz.dto.DeviceRentDto;
 import com.lz.pojo.Device;
+import com.lz.pojo.DeviceRent;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,4 +20,5 @@ public interface DeviceMapper {
     Long filterCount(Map<String, Object> searchParam);
 
     Device findByDeviceId(Integer id);
+
 }

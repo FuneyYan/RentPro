@@ -105,17 +105,18 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="deviceArray.length==0">
-                                <td colspan="6">暂无数据</td>
-                            </tr>
-                            <tr v-for="device in deviceArray">
-                                <td>{{device.devicename}}</td>
-                                <td>{{device.unit}}</td>
-                                <td>{{device.price}}</td>
-                                <td>{{device.num}}</td>
-                                <td>{{device.total}}</td>
-                                <td><a href="javascript:;" @click="remove(device)"><i class="fa fa-trash text-danger"></i></a></td>
-                            </tr>
+                        <tr v-if="deviceArray.length==0">
+                            <td colspan="6">暂无数据</td>
+                        </tr>
+                        <tr v-for="device in deviceArray">
+                            <td>{{device.devicename}}</td>
+                            <td>{{device.unit}}</td>
+                            <td>{{device.price}}</td>
+                            <td>{{device.num}}</td>
+                            <td>{{device.total}}</td>
+                            <td><a href="javascript:;" @click="remove(device)"><i
+                                    class="fa fa-trash text-danger"></i></a></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -133,7 +134,7 @@
                     注意：上传合同扫描件要求清晰可见 合同必须公司法人签字盖章
                     <ul id="fileList">
                     </ul>
-                    <button class="btn btn-primary pull-right">保存合同</button>
+                    <button class="btn btn-primary pull-right" v-on:click="saveRent">保存合同</button>
                 </div>
             </div>
 
@@ -201,7 +202,7 @@
 <script src="/static/plugins/layer/layer.js"></script>
 <script src="/static/plugins/uploader/webuploader.min.js"></script>
 <script>
-    var fileArray=[];
+    var fileArray = [];
     $(function () {
         $("#deviceId").select2();
 
@@ -237,28 +238,28 @@
         });
 
 
-        var uploader=WebUploader.create({
-            swf : "js/uploader/Uploader.swf",
+        var uploader = WebUploader.create({
+            swf: "js/uploader/Uploader.swf",
             server: "/file/upload",
             pick: '#picker',
-            auto : true,
-            fileVal:'file'
+            auto: true,
+            fileVal: 'file'
         });
 
-        uploader.on("uploadSuccess",function (file,resp) {
-           layer.msg("上传成功");
-            var html="<h5>"+resp.data.sourceName+"</h5>";
+        uploader.on("uploadSuccess", function (file, resp) {
+            layer.msg("上传成功");
+            var html = "<h5>" + resp.data.sourceName + "</h5>";
             $("#fileList").append(html);
 
-            var json={
-                newFileName:resp.data.newFileName,
-                sourceName:resp.data.sourceName
+            var json = {
+                newFileName: resp.data.newFileName,
+                sourceName: resp.data.sourceName
             };
             fileArray.push(json);
         });
 
-        uploader.on("uploadError",function () {
-           layer.msg("服务器忙,请稍后");
+        uploader.on("uploadError", function () {
+            layer.msg("服务器忙,请稍后");
         });
 
 
@@ -273,7 +274,7 @@
         },
         methods: {
             addDevice: function () {
-                var totalDays=parseInt($("#totaldays").val());
+                var totalDays = parseInt($("#totaldays").val());
                 var id = $("#deviceId").val();
                 var flag = false;
                 for (var i = 0; i < this.$data.deviceArray.length; i++) {
@@ -292,16 +293,54 @@
                     json.unit = $("#unit").val();
                     json.price = $("#price").val();
                     json.num = $("#rentnum").val();
-                    json.total = parseFloat(json.price) * parseFloat(json.num)*parseInt($("#totaldays").val());
+                    json.total = parseFloat(json.price) * parseFloat(json.num) * parseInt($("#totaldays").val());
                     this.$data.deviceArray.push(json);
                 }
             },
-            remove:function (device) {
-                layer.confirm("你确定要删除吗?",function (index) {
-                   app.$data.deviceArray.splice(app.$data.deviceArray.indexOf(device),1);
+            remove: function (device) {
+                layer.confirm("你确定要删除吗?", function (index) {
+                    app.$data.deviceArray.splice(app.$data.deviceArray.indexOf(device), 1);
                     layer.close(index);
                 });
             },
+            saveRent: function () {
+                var json = {
+                    deviceArray: app.$data.deviceArray,
+                    fileArray:fileArray,
+                    companyname:$("#companyname").val(),
+                    tel:$("#tel").val(),
+                    linkman:$("#linkman").val(),
+                    cardnum:$("#cardnum").val(),
+                    address:$("#address").val(),
+                    fax:$("#fax").val(),
+                    rentdate:$("#rentdate").val(),
+                    backdate:$("#backdate").val(),
+                    totaldate:$("#totaldays").val(),
+                };
+
+                $.ajax({
+                    url:"/device/rent/new",
+                    type:"post",
+                    data:JSON.stringify(json),
+                    contentType:"application/json;charset=UTF-8",
+                    success:function (data) {
+                        if(data.status=='success'){
+                            layer.confirm("保存成功",{btn:['继续添加','打印合同']},function () {
+                                window.history.go(0);
+                            },function () {
+                                window.location.href="/device/rent/"+data.data;
+                            });
+                        }else{
+                            layer.msg(data.message);
+                        }
+                    },
+                    error:function () {
+                        layer.msg("服务器忙...");
+                    }
+
+                })
+
+            }
 
         },
         computed: {
