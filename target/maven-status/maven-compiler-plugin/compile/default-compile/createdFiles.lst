@@ -1,4 +1,5 @@
 com\lz\pojo\Role.class
+com\lz\controller\FileController.class
 com\lz\controller\UserController.class
 com\lz\mapper\DeviceMapper.class
 com\lz\controller\DeviceRentController.class
@@ -11,6 +12,8 @@ com\lz\controller\HomeController.class
 com\lz\service\impl\UserServiceImpl.class
 com\lz\shiro\ShiroDbRealm.class
 com\lz\mapper\UserMapper.class
+com\lz\service\impl\FileServiceImpl.class
+com\lz\service\FileService.class
 com\lz\util\Page.class
 com\lz\exception\NotFoundException.class
 com\lz\dto\RenderJson.class

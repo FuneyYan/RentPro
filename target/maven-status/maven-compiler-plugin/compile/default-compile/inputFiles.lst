@@ -10,10 +10,13 @@ G:\Practice\Git\SSM\src\main\java\com\lz\controller\HomeController.java
 G:\Practice\Git\SSM\src\main\java\com\lz\pojo\Device.java
 G:\Practice\Git\SSM\src\main\java\com\lz\mapper\DeviceMapper.java
 G:\Practice\Git\SSM\src\main\java\com\lz\mapper\RoleMapper.java
+G:\Practice\Git\SSM\src\main\java\com\lz\controller\FileController.java
 G:\Practice\Git\SSM\src\main\java\com\lz\controller\UserController.java
 G:\Practice\Git\SSM\src\main\java\com\lz\exception\NotFoundException.java
 G:\Practice\Git\SSM\src\main\java\com\lz\pojo\Role.java
+G:\Practice\Git\SSM\src\main\java\com\lz\service\FileService.java
 G:\Practice\Git\SSM\src\main\java\com\lz\util\Page.java
+G:\Practice\Git\SSM\src\main\java\com\lz\service\impl\FileServiceImpl.java
 G:\Practice\Git\SSM\src\main\java\com\lz\pojo\User.java
 G:\Practice\Git\SSM\src\main\java\com\lz\service\impl\DeviceServiceImpl.java
 G:\Practice\Git\SSM\src\main\java\com\lz\service\UserService.java

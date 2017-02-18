@@ -9,6 +9,7 @@
     <%@include file="../../include/css.jsp" %>
     <link rel="stylesheet" href="/static/plugins/select2/select2.min.css">
     <link rel="stylesheet" href="/static/plugins/datepicker/datepicker3.css">
+    <link rel="stylesheet" href="/static/plugins/uploader/webuploader.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -74,7 +75,7 @@
                             </div>
                             <div class="form-group">
                                 <label>总天数</label>
-                                <input type="text" class="form-control" id="totaldays">
+                                <input type="text" class="form-control" id="totaldays" readonly>
                             </div>
                         </div>
                     </div>
@@ -100,15 +101,26 @@
                             <th>租赁单价</th>
                             <th>数量</th>
                             <th>总价</th>
+                            <th>*</th>
                         </tr>
                         </thead>
                         <tbody>
-
+                            <tr v-if="deviceArray.length==0">
+                                <td colspan="6">暂无数据</td>
+                            </tr>
+                            <tr v-for="device in deviceArray">
+                                <td>{{device.devicename}}</td>
+                                <td>{{device.unit}}</td>
+                                <td>{{device.price}}</td>
+                                <td>{{device.num}}</td>
+                                <td>{{device.total}}</td>
+                                <td><a href="javascript:;" @click="remove(device)"><i class="fa fa-trash text-danger"></i></a></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="box-footer" style="text-align: right">
-                    总租赁费 {{total}} 元 预付款 {{preCost}} 元 尾款 元
+                    总租赁费 {{total}} 元 预付款 {{preCost}} 元 尾款 {{lastCost}}元
                 </div>
             </div>
 
@@ -119,6 +131,8 @@
                 <div class="box-body">
                     <div id="picker">选择文件</div>
                     注意：上传合同扫描件要求清晰可见 合同必须公司法人签字盖章
+                    <ul id="fileList">
+                    </ul>
                     <button class="btn btn-primary pull-right">保存合同</button>
                 </div>
             </div>
@@ -139,7 +153,7 @@
                 <div class="modal-body">
                     <form action="">
                         <div class="form-group">
-                            <input type="hidden" id="deviceName">
+                            <input type="hidden" id="devicename">
                             <label>设备名称</label>
                             <select id="deviceId" style="width: 300px;" class="form-control">
                                 <option value="">选择设备</option>
@@ -168,7 +182,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary">加入列表</button>
+                    <button type="button" class="btn btn-primary" v-on:click="addDevice">加入列表</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -185,7 +199,9 @@
 <script src="/static/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
 <script src="/static/plugins/vue.js"></script>
 <script src="/static/plugins/layer/layer.js"></script>
+<script src="/static/plugins/uploader/webuploader.min.js"></script>
 <script>
+    var fileArray=[];
     $(function () {
         $("#deviceId").select2();
 
@@ -195,38 +211,115 @@
             format: "yyyy-mm-dd",
             language: "zh-CN",
             autoclose: true,
-            startDate:moment().add(1,'days').format("YYYY-MM-DD")
-        }).on("changeDate",function (e) {
+            startDate: moment().add(1, 'days').format("YYYY-MM-DD")
+        }).on("changeDate", function (e) {
 //            选择归还日期时计算总天数
-            var rentday=moment();
-            var backday=moment(e.format(0,'yyyy-mm-dd'));
-            var totaldays=backday.diff(rentday,'days')+1;
+            var rentday = moment();
+            var backday = moment(e.format(0, 'yyyy-mm-dd'));
+            var totaldays = backday.diff(rentday, 'days') + 1;
             $("#totaldays").val(totaldays);
         });
 
         $("#deviceId").change(function () {
-            var id=$(this).val();
-           $.get("/device/rent/render.json",{'id':id}).done(function (resp) {
-               if(resp.status=='success'){
-                   $("#currentnum").val(resp.data.currentnum);
-                   $("#unit").val(resp.data.unit);
-                   $("#price").val(resp.data.price);
-                   $("#deviceName").val(resp.data.name);
-               }else{
-                   layer.alert(resp.message);
-               }
-           }).error(function () {
-              layer.msg("服务器异常");
-           });
+            var id = $(this).val();
+            $.get("/device/rent/render.json", {'id': id}).done(function (resp) {
+                if (resp.status == 'success') {
+                    $("#currentnum").val(resp.data.currentnum);
+                    $("#unit").val(resp.data.unit);
+                    $("#price").val(resp.data.price);
+                    $("#devicename").val(resp.data.name);
+                } else {
+                    layer.alert(resp.message);
+                }
+            }).error(function () {
+                layer.msg("服务器异常");
+            });
+        });
+
+
+        var uploader=WebUploader.create({
+            swf : "js/uploader/Uploader.swf",
+            server: "/file/upload",
+            pick: '#picker',
+            auto : true,
+            fileVal:'file'
+        });
+
+        uploader.on("uploadSuccess",function (file,resp) {
+           layer.msg("上传成功");
+            var html="<h5>"+resp.data.sourceName+"</h5>";
+            $("#fileList").append(html);
+
+            var json={
+                newFileName:resp.data.newFileName,
+                sourceName:resp.data.sourceName
+            };
+            fileArray.push(json);
+        });
+
+        uploader.on("uploadError",function () {
+           layer.msg("服务器忙,请稍后");
         });
 
 
     });
 
 
-//    添加的临时的设备租赁列表
-    var app=new Vue({
+    //    添加的临时的设备租赁列表
+    var app = new Vue({
+        el: "#app",
+        data: {
+            deviceArray: []
+        },
+        methods: {
+            addDevice: function () {
+                var totalDays=parseInt($("#totaldays").val());
+                var id = $("#deviceId").val();
+                var flag = false;
+                for (var i = 0; i < this.$data.deviceArray.length; i++) {
+                    var item = this.$data.deviceArray[i];
+                    if (item.id == id) {
+                        this.$data.deviceArray[i].num = parseFloat(this.$data.deviceArray[i].num) + parseFloat($("#rentnum").val());
+                        this.$data.deviceArray[i].total = parseFloat(this.$data.deviceArray[i].num) * parseFloat($("#price").val());
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) {
+                    var json = {};
+                    json.id = id;
+                    json.devicename = $("#devicename").val();
+                    json.unit = $("#unit").val();
+                    json.price = $("#price").val();
+                    json.num = $("#rentnum").val();
+                    json.total = parseFloat(json.price) * parseFloat(json.num)*parseInt($("#totaldays").val());
+                    this.$data.deviceArray.push(json);
+                }
+            },
+            remove:function (device) {
+                layer.confirm("你确定要删除吗?",function (index) {
+                   app.$data.deviceArray.splice(app.$data.deviceArray.indexOf(device),1);
+                    layer.close(index);
+                });
+            },
 
+        },
+        computed: {
+            total: function () {
+                var result = 0;
+                for (var i = 0; i < this.$data.deviceArray.length; i++) {
+                    var item = this.$data.deviceArray[i];
+                    result += item.total;
+                }
+                return result;
+            },
+            preCost: function () {
+                return this.total * 0.3;
+            },
+            lastCost: function () {
+                return this.total - this.preCost;
+            }
+        }
     });
 
 
