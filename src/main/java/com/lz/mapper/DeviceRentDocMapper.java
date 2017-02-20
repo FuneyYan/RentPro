@@ -11,4 +11,6 @@ public interface DeviceRentDocMapper {
     void batchSave(List<DeviceRentDoc> rentDocList);
 
     List<DeviceRentDoc> findDeviceDocListByRentId(Integer id);
+
+    DeviceRentDoc findById(Integer docId);
 }

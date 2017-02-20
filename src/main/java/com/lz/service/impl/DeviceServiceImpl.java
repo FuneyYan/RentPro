@@ -2,6 +2,7 @@ package com.lz.service.impl;
 
 import com.google.common.collect.Lists;
 import com.lz.dto.DeviceRentDto;
+import com.lz.exception.NotFoundException;
 import com.lz.mapper.DeviceMapper;
 import com.lz.mapper.DeviceRentDetailMapper;
 import com.lz.mapper.DeviceRentDocMapper;
@@ -13,12 +14,17 @@ import com.lz.pojo.DeviceRentDoc;
 import com.lz.service.DeviceService;
 import com.lz.util.SerialNumberUtil;
 import com.lz.util.ShiroUtil;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
@@ -31,6 +37,9 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceRentDetailMapper detailMapper;
     @Autowired
     private DeviceRentDocMapper docMapper;
+
+    @Value("${upload.path}")
+    private String filePath;
 
     @Override
     public List<Device> findAll() {
@@ -89,6 +98,13 @@ public class DeviceServiceImpl implements DeviceService {
         List<DeviceRentDetail> detailList= Lists.newArrayList();
         float total=0F;
         for(DeviceRentDto.DeviceArrayBean bean:deviceArray){
+            Device device=deviceMapper.findByDeviceId(bean.getId());
+            if(device.getCurrentnum()<bean.getNum()){
+                throw new RuntimeException(device.getName()+"库存不足");
+            }else{
+                device.setCurrentnum(device.getCurrentnum()-bean.getNum());
+                deviceMapper.updateCurrentNum(device);
+            }
             DeviceRentDetail rentDetail=new DeviceRentDetail();
             rentDetail.setId(bean.getId());
             rentDetail.setTotalprice(bean.getTotal());
@@ -141,5 +157,45 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public List<DeviceRentDoc> findDeviceDocListByRentId(Integer id) {
         return docMapper.findDeviceDocListByRentId(id);
+    }
+
+    @Override
+    public InputStream downloadFile(Integer docId) throws IOException {
+        DeviceRentDoc rentDoc=docMapper.findById(docId);
+        if(rentDoc==null){
+            return null;
+        }else{
+            File file=new File(filePath+"/"+rentDoc.getFilename());
+            if(file.exists()){
+                return new FileInputStream(file);
+            }
+            return null;
+        }
+    }
+
+    @Override
+    public DeviceRentDoc findDeviceDocById(Integer id) {
+        return docMapper.findById(id);
+    }
+
+    @Override
+    public DeviceRent findDeviceRentById(Integer rentId) {
+        return rentMapper.findDeviceById(rentId);
+    }
+
+    @Override
+    public void downloadZipFile(DeviceRent rent, ZipOutputStream zipOutputStream) throws IOException {
+        List<DeviceRentDoc> rentDocList=findDeviceDocListByRentId(rent.getId());
+        for(DeviceRentDoc rentDoc:rentDocList){
+            ZipEntry entry=new ZipEntry(rentDoc.getSourcename());
+            zipOutputStream.putNextEntry(entry);
+
+            InputStream inputStream=downloadFile(rentDoc.getId());
+            IOUtils.copy(inputStream,zipOutputStream);
+            inputStream.close();
+        }
+        zipOutputStream.closeEntry();
+        zipOutputStream.flush();
+        zipOutputStream.close();
     }
 }

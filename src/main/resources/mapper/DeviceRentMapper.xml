@@ -18,4 +18,8 @@
     <select id="findDeviceRentBySerial" resultType="DeviceRent">
         SELECT * FROM t_devicerent WHERE serialnumber=#{id}
     </select>
+
+    <select id="findDeviceById" resultType="DeviceRent">
+        SELECT * FROM t_devicerent WHERE id=#{id}
+    </select>
 </mapper>

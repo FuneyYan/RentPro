@@ -319,7 +319,7 @@
                 };
 
                 $.ajax({
-                    url:"/device/rent/new",
+                    url:"/device/rent/add",
                     type:"post",
                     data:JSON.stringify(json),
                     contentType:"application/json;charset=UTF-8",

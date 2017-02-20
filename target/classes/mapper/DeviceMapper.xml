@@ -38,4 +38,8 @@
         INSERT INTO t_device(name,unit,totalnum,currentnum,price)
          VALUES (#{name},#{unit},#{totalnum},#{currentnum},#{price})
     </insert>
+
+    <update id="updateCurrentNum">
+        UPDATE t_device SET currentnum=${currentnum} WHERE id=#{id}
+    </update>
 </mapper>

@@ -13,4 +13,8 @@
     <select id="findDeviceDocListByRentId" resultType="DeviceRentDoc">
         SELECT * FROM t_devicerentdoc WHERE rentid=#{id}
     </select>
+
+    <select id="findById" resultType="DeviceRentDoc">
+        SELECT * FROM t_devicerentdoc where id=#{id}
+    </select>
 </mapper>

@@ -8,8 +8,13 @@ import com.lz.pojo.DeviceRentDoc;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipOutputStream;
 
 public interface DeviceService {
     List<Device> findAll();
@@ -30,4 +35,12 @@ public interface DeviceService {
     List<DeviceRentDetail> findDeviceDetailListByRentId(Integer id);
 
     List<DeviceRentDoc> findDeviceDocListByRentId(Integer id);
+
+    InputStream downloadFile(Integer docId) throws IOException;
+
+    DeviceRentDoc findDeviceDocById(Integer id);
+
+    DeviceRent findDeviceRentById(Integer rentId);
+
+    void downloadZipFile(DeviceRent rent, ZipOutputStream zipOutputStream) throws IOException;
 }

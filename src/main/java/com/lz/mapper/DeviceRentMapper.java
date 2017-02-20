@@ -15,4 +15,6 @@ public interface DeviceRentMapper {
                 @Param("id") Integer id);
 
     DeviceRent findDeviceRentBySerial(String serialNumber);
+
+    DeviceRent findDeviceById(Integer rentId);
 }

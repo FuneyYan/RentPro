@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>设备租赁合同显示</title>
-    <%@include file="../../include/css.jsp"%>
+    <%@include file="../../include/css.jsp" %>
     <link rel="stylesheet" href="/static/plugins/uploader/webuploader.css">
     <link rel="stylesheet" href="/static/plugins/datepicker/datepicker3.css">
     <link rel="stylesheet" href="/static/plugins/select2/select2.min.css">
@@ -15,7 +15,7 @@
 <!-- Site wrapper -->
 <div class="wrapper" id="app">
 
-    <%@include file="../../include/header.jsp"%>
+    <%@include file="../../include/header.jsp" %>
     <jsp:include page="../../include/sider.jsp">
         <jsp:param name="menu" value="business_device_rent"/>
     </jsp:include>
@@ -103,24 +103,24 @@
                 <div class="box-body">
                     <table class="table">
                         <thead>
-                            <tr>
-                                <th>设备名称</th>
-                                <th>单位</th>
-                                <th>租赁单价</th>
-                                <th>数量</th>
-                                <th>总价</th>
-                            </tr>
+                        <tr>
+                            <th>设备名称</th>
+                            <th>单位</th>
+                            <th>租赁单价</th>
+                            <th>数量</th>
+                            <th>总价</th>
+                        </tr>
                         </thead>
                         <tbody>
+                        <c:forEach items="${rentDetailList}" var="detail">
                             <tr>
-                                <c:forEach items="${rentDetailList}" var="detail">
-                                    <td>${detail.devicename}</td>
-                                    <td>${detail.deviceunit}</td>
-                                    <td>${detail.deviceprice}</td>
-                                    <td>${detail.num}</td>
-                                    <td>${detail.totalprice}</td>
-                                </c:forEach>
+                                <td>${detail.devicename}</td>
+                                <td>${detail.deviceunit}</td>
+                                <td>${detail.deviceprice}</td>
+                                <td>${detail.num}</td>
+                                <td>${detail.totalprice}</td>
                             </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </div>
@@ -129,11 +129,14 @@
             <div class="box hidden-print">
                 <div class="box-header">
                     <h3 class="box-title">合同扫描件</h3>
+                    <div class="box--tools pull-right">
+                        <a href="/device/rent/doc/zip?id=${deviceRent.id}" class="btn btn-sm btn-primary">打印全部</a>
+                    </div>
                 </div>
                 <div class="box-body">
                     <ul id="fileList">
                         <c:forEach items="${rentDocList}" var="doc">
-                            <li>${doc.sourcename}</li>
+                            <li><a href="/device/rent/doc?id=${doc.id}">${doc.sourcename}</a></li>
                         </c:forEach>
                     </ul>
                 </div>
@@ -147,11 +150,11 @@
 
 </div>
 
-<%@include file="../../include/js.jsp"%>
+<%@include file="../../include/js.jsp" %>
 <script>
     $(function () {
         $("#print").click(function () {
-           window.print();
+            window.print();
         });
     });
 </script>
