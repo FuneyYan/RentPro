@@ -21,6 +21,7 @@ public class DeviceRent {
     private Timestamp createtime;
     private String createuser;
     private String serialnumber;
+    private String state;
 
     public Integer getId() {
         return id;
@@ -148,6 +149,14 @@ public class DeviceRent {
 
     public void setSerialnumber(String serialnumber) {
         this.serialnumber = serialnumber;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     @Override

@@ -8,6 +8,7 @@ com\lz\controller\UserController.class
 com\lz\mapper\DeviceMapper.class
 com\lz\controller\DeviceRentController.class
 com\lz\pojo\DeviceRentDoc.class
+com\lz\dto\DataTablesResult.class
 com\lz\dto\DeviceRentDto.class
 com\lz\service\DeviceService.class
 com\lz\mapper\DeviceRentDocMapper.class

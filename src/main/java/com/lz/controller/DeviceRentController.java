@@ -1,6 +1,8 @@
 package com.lz.controller;
 
+import com.google.common.collect.Maps;
 import com.google.common.primitives.Chars;
+import com.lz.dto.DataTablesResult;
 import com.lz.dto.DeviceRentDto;
 import com.lz.dto.RenderJson;
 import com.lz.exception.NotFoundException;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +31,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
 @Controller
@@ -119,5 +123,33 @@ public class DeviceRentController {
             deviceService.downloadZipFile(rent,zipOutputStream);
         }
     }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/load")
+    @ResponseBody
+    public DataTablesResult load(HttpServletRequest request){
+
+        String draw=request.getParameter("draw");
+        String start=request.getParameter("start");
+        String length=request.getParameter("length");
+
+        Map<String,Object> map= Maps.newHashMap();
+        map.put("start",start);
+        map.put("length",length);
+
+        List<DeviceRent> deviceRentList=deviceService.findDeviceRentByParam(map);
+        Long count=deviceService.deviceRentCount();
+        return new DataTablesResult(draw,count,count,deviceRentList);
+    }
+
+    @RequestMapping(method = RequestMethod.POST,value = "/state/change")
+    @ResponseBody
+    public RenderJson changeState(Integer id){
+
+        deviceService.rentChangeState(id);
+        return new RenderJson(RenderJson.SUCCESS);
+
+    }
+
+
 
 }

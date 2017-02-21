@@ -410,70 +410,73 @@ roleid</columns>
     <column id="127" parent="25" name="serialnumber">
       <data-type>varchar(30)|0</data-type>
     </column>
-    <key id="128" parent="25" name="PRIMARY">
+    <column id="128" parent="25" name="state">
+      <data-type>varchar(10)|0</data-type>
+    </column>
+    <key id="129" parent="25" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <column id="129" parent="26" name="id">
+    <column id="130" parent="26" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="130" parent="26" name="devicename">
+    <column id="131" parent="26" name="devicename">
       <data-type>varchar(30)|0</data-type>
     </column>
-    <column id="131" parent="26" name="deviceunit">
+    <column id="132" parent="26" name="deviceunit">
       <data-type>varchar(10)|0</data-type>
     </column>
-    <column id="132" parent="26" name="deviceprice">
+    <column id="133" parent="26" name="deviceprice">
       <data-type>float|0</data-type>
     </column>
-    <column id="133" parent="26" name="num">
+    <column id="134" parent="26" name="num">
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="134" parent="26" name="totalprice">
+    <column id="135" parent="26" name="totalprice">
       <data-type>float|0</data-type>
     </column>
-    <column id="135" parent="26" name="rentid">
+    <column id="136" parent="26" name="rentid">
       <data-type>int(11)|0</data-type>
     </column>
-    <index id="136" parent="26" name="fk_detail_rentid">
+    <index id="137" parent="26" name="fk_detail_rentid">
       <columns>rentid</columns>
       <desc-columns></desc-columns>
     </index>
-    <key id="137" parent="26" name="PRIMARY">
+    <key id="138" parent="26" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <foreign-key id="138" parent="26" name="fk_detail_rentid">
+    <foreign-key id="139" parent="26" name="fk_detail_rentid">
       <columns>rentid</columns>
       <ref-key>~.t_devicerent.PRIMARY</ref-key>
       <cascade-update-rule>restrict</cascade-update-rule>
       <cascade-delete-rule>restrict</cascade-delete-rule>
     </foreign-key>
-    <column id="139" parent="27" name="id">
+    <column id="140" parent="27" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="140" parent="27" name="sourcename">
+    <column id="141" parent="27" name="sourcename">
       <data-type>varchar(50)|0</data-type>
     </column>
-    <column id="141" parent="27" name="filename">
+    <column id="142" parent="27" name="filename">
       <data-type>varchar(50)|0</data-type>
     </column>
-    <column id="142" parent="27" name="rentid">
+    <column id="143" parent="27" name="rentid">
       <data-type>int(11)|0</data-type>
     </column>
-    <index id="143" parent="27" name="fk_detail_rentid">
+    <index id="144" parent="27" name="fk_detail_rentid">
       <columns>rentid</columns>
       <desc-columns></desc-columns>
     </index>
-    <key id="144" parent="27" name="PRIMARY">
+    <key id="145" parent="27" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <foreign-key id="145" parent="27" name="fk_doc_rentid">
+    <foreign-key id="146" parent="27" name="fk_doc_rentid">
       <columns>rentid</columns>
       <ref-key>~.t_devicerent.PRIMARY</ref-key>
       <cascade-update-rule>restrict</cascade-update-rule>

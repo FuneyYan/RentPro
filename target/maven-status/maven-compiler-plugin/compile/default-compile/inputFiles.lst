@@ -9,6 +9,7 @@ G:\Practice\Git\SSM\src\main\java\com\lz\shiro\ShiroDbRealm.java
 G:\Practice\Git\SSM\src\main\java\com\lz\controller\HomeController.java
 G:\Practice\Git\SSM\src\main\java\com\lz\pojo\Device.java
 G:\Practice\Git\SSM\src\main\java\com\lz\mapper\DeviceMapper.java
+G:\Practice\Git\SSM\src\main\java\com\lz\dto\DataTablesResult.java
 G:\Practice\Git\SSM\src\main\java\com\lz\controller\FileController.java
 G:\Practice\Git\SSM\src\main\java\com\lz\controller\UserController.java
 G:\Practice\Git\SSM\src\main\java\com\lz\mapper\DeviceRentDocMapper.java

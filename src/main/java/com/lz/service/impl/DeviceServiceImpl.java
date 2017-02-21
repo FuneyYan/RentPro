@@ -198,4 +198,23 @@ public class DeviceServiceImpl implements DeviceService {
         zipOutputStream.flush();
         zipOutputStream.close();
     }
+
+    @Override
+    public List<DeviceRent> findDeviceRentByParam(Map<String, Object> map) {
+        List<DeviceRent> deviceRentList=rentMapper.findDevicerentByParam(map);
+        return deviceRentList;
+    }
+
+    @Override
+    public Long deviceRentCount() {
+        return rentMapper.count();
+    }
+
+    @Override
+    public void rentChangeState(Integer id) {
+        DeviceRent rent=findDeviceRentById(id);
+
+        rent.setState("已完成");
+        rentMapper.updateState(rent);
+    }
 }

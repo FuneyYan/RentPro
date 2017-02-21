@@ -15,6 +15,10 @@
         lastcost=#{lastcost},totalprice=#{total} WHERE id=#{id}
     </update>
 
+    <update id="updateState">
+        UPDATE t_devicerent SET state=#{state} WHERE id=#{id}
+    </update>
+
     <select id="findDeviceRentBySerial" resultType="DeviceRent">
         SELECT * FROM t_devicerent WHERE serialnumber=#{id}
     </select>
@@ -22,4 +26,15 @@
     <select id="findDeviceById" resultType="DeviceRent">
         SELECT * FROM t_devicerent WHERE id=#{id}
     </select>
+
+    <select id="findDevicerentByParam" resultType="DeviceRent">
+        SELECT * FROM t_devicerent
+        limit ${start},${length}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT count(*) FROM t_devicerent
+    </select>
+
+
 </mapper>
