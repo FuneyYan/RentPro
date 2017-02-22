@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lz.mapper.WorkRentDetailMapper">
+    <insert id="batchSave">
+        INSERT INTO t_workrentdetail(workname, workprice,
+        worknum, totalprice, rentid)
+        VALUES
+          <foreach collection="list" item="work" separator=",">
+              (#{work.workname},#{work.workprice},
+              #{work.worknum},#{work.totalprice},#{work.rentid})
+          </foreach>
+    </insert>
+    <select id="findDeviceRentDetailListByRentId" resultType="WorkRentDetail">
+        SELECT * FROM t_workrentdetail WHERE rentid=#{id}
+    </select>
+</mapper>

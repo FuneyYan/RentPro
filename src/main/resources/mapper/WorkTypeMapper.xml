@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lz.mapper.WorkTypeMapper">
+    <select id="findAll" resultType="WorkType">
+        SELECT * FROM t_worktype
+    </select>
+    <select id="findWorkById" resultType="WorkType">
+         SELECT * FROM t_worktype WHERE id=#{id}
+    </select>
+
+    <update id="updateCurrentNum">
+        UPDATE t_worktype SET currentnum=${currentnum} WHERE id=#{id}
+    </update>
+
+
+</mapper>

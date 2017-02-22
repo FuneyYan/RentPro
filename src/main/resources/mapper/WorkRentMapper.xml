@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lz.mapper.WorkRentMapper">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO t_workrent
+      (companyname, linkman, totalprice, address, tel, precost,
+      companytel,cardnum, lastcost,  serialnumber)
+       VALUES (#{companyname},#{linkman},#{totalprice},#{address},
+       #{tel},#{precost},#{companytel},#{cardnum},#{lastcost},#{serialnumber})
+  </insert>
+    <update id="updateCost">
+        UPDATE t_workrent SET precost=#{preCost},
+        lastcost=#{lastCost},totalprice=#{total} WHERE id=#{id}
+    </update>
+
+    <select id="findDeviceRentBySerialNumber" resultType="WorkRent">
+        SELECT * FROM t_workrent WHERE serialnumber=#{serialNumber}
+    </select>
+    <select id="findById" resultType="WorkRent">
+        SELECT * FROM t_workrent WHERE id=#{id}
+    </select>
+</mapper>

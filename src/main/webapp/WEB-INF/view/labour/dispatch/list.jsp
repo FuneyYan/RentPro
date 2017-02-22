@@ -11,7 +11,7 @@
 
     <%@include file="../../include/header.jsp" %>
     <jsp:include page="../../include/sider.jsp">
-        <jsp:param name="menu" value="business_device_rent"/>
+        <jsp:param name="menu" value="labour"/>
     </jsp:include>
 
     <!-- Content Wrapper. Contains page content -->
@@ -65,38 +65,38 @@
 <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
 <script>
     $(function () {
-       var table=$(".table").DataTable({
-           "lengthChange": false,
-           "pageLength": 5,
-           "serverSide": true,
+        var table=$(".table").DataTable({
+            "lengthChange": false,
+            "pageLength": 5,
+            "serverSide": true,
 
-           "searching":false,//不使用自带的搜索
-           "order":[[0,'desc']],//默认排序方式,
-           "ordering": false,
-           "autoWidth": false,
-           "columns": [
+            "searching":false,//不使用自带的搜索
+            "order":[[0,'desc']],//默认排序方式,
+            "ordering": false,
+            "autoWidth": false,
+            "columns": [
 
-           ],
-           "columnDefs": [
-               {targets: [0], visible: false}
-           ],
+            ],
+//            "columnDefs": [
+//                {targets: [0], visible: false}
+//            ],
 
-           "language": { //定义中文
-               "search": "搜索:",
-               "zeroRecords": "没有匹配的数据",
-               "lengthMenu": "显示 _MENU_ 条数据",
-               "info": "显示从 _START_ 到 _END_ 条数据 共 _TOTAL_ 条数据",
-               "infoFiltered": "(从 _MAX_ 条数据中过滤得来)",
-               "loadingRecords": "加载中...",
-               "processing": "处理中...",
-               "paginate": {
-                   "first": "首页",
-                   "last": "末页",
-                   "next": "下一页",
-                   "previous": "上一页"
-               }
-           }
-       });
+            "language": { //定义中文
+                "search": "搜索:",
+                "zeroRecords": "没有匹配的数据",
+                "lengthMenu": "显示 _MENU_ 条数据",
+                "info": "显示从 _START_ 到 _END_ 条数据 共 _TOTAL_ 条数据",
+                "infoFiltered": "(从 _MAX_ 条数据中过滤得来)",
+                "loadingRecords": "加载中...",
+                "processing": "处理中...",
+                "paginate": {
+                    "first": "首页",
+                    "last": "末页",
+                    "next": "下一页",
+                    "previous": "上一页"
+                }
+            }
+        });
     });
 </script>
 </body>

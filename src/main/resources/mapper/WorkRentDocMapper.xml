@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lz.mapper.WorkRentDocMapper">
+    <insert id="batchSave">
+        INSERT INTO t_workrentdoc(sourcename, filename, rentid) VALUES
+        <foreach collection="list" item="doc" separator=",">
+            (#{doc.sourcename},#{doc.filename},#{doc.rentid})
+        </foreach>
+    </insert>
+
+    <select id="findDeviceRentDocListByRentId" resultType="WorkRentDoc">
+        SELECT * FROM t_workrentdoc WHERE rentid=#{id}
+    </select>
+
+    <select id="findById" resultType="WorkRentDoc">
+        SELECT * FROM t_workrentdoc WHERE id=#{id}
+    </select>
+</mapper>

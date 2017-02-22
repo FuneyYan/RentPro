@@ -103,16 +103,15 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-if="deviceArray.length==0">
+                        <tr v-if="workArray.length==0">
                             <td colspan="6">暂无数据</td>
                         </tr>
-                        <tr v-for="device in deviceArray">
-                            <td>{{device.devicename}}</td>
-                            <td>{{device.unit}}</td>
-                            <td>{{device.unit}}</td>
-                            <td>{{device.unit}}</td>
-                            <td><a href="javascript:;" @click="remove(device)"><i
-                                    class="fa fa-trash text-danger"></i></a></td>
+                        <tr v-for="work in workArray">
+                            <td>{{work.name}}</td>
+                            <td>{{work.price}}</td>
+                            <td>{{work.num}}</td>
+                            <td>{{work.total}}</td>
+                            <td><a href="javascript:;" @click="remove(work)"><i class="fa fa-trash text-danger"></i></a></td>
                         </tr>
                         </tbody>
                     </table>
@@ -128,7 +127,7 @@
                     注意：上传合同扫描件要求清晰可见 合同必须公司法人签字盖章
                     <ul id="fileList">
                     </ul>
-                    <button class="btn btn-primary pull-right" v-on:click="saveRent">保存合同</button>
+                    <button class="btn btn-primary pull-right" @click="saveRent">保存合同</button>
                 </div>
             </div>
 
@@ -143,41 +142,37 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">选择设备</h4>
+                    <h4 class="modal-title">添加工种</h4>
                 </div>
                 <div class="modal-body">
                     <form action="">
                         <div class="form-group">
-                            <input type="hidden" id="devicename">
-                            <label>设备名称</label>
-                            <select id="deviceId" style="width: 300px;" class="form-control">
-                                <option value="">选择设备</option>
-                                <c:forEach items="${deviceList}" var="device">
-                                    <option value="${device.id}">${device.name}</option>
+                            <input type="hidden" id="worktypename">
+                            <label>工种</label>
+                            <select id="worktype" style="width: 300px;" class="form-control">
+                                <option value="">选择工种</option>
+                                <c:forEach items="${workTypeList}" var="work">
+                                    <option value="${work.id}">${work.name}</option>
                                 </c:forEach>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>库存数量</label>
-                            <input type="text" class="form-control" id="currentnum" readonly>
+                            <label>单位佣金</label>
+                            <input type="text"  class="form-control" id="workprice" readonly>
                         </div>
                         <div class="form-group">
-                            <label>单位</label>
-                            <input type="text" class="form-control" id="unit" readonly>
+                            <label>工种数量</label>
+                            <input type="text" class="form-control" id="worknum" value="1">
                         </div>
                         <div class="form-group">
-                            <label>租赁单价</label>
-                            <input type="text" class="form-control" id="price" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>租赁数量</label>
-                            <input type="text" class="form-control" id="rentnum">
+                            <label>小计</label>
+                            <input type="text" class="form-control" id="totalprice" readonly>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" v-on:click="addDevice">加入列表</button>
+                    <button type="button" class="btn btn-primary" v-on:click="addWork">加入列表</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -195,5 +190,159 @@
 <script src="/static/plugins/vue.js"></script>
 <script src="/static/plugins/layer/layer.js"></script>
 <script src="/static/plugins/uploader/webuploader.min.js"></script>
+<script>
+    var fileArray = [];
+    $(function () {
+        $("#worktype").select2();
+
+        $("#worktype").change(function () {
+            var id=$(this).val();
+            $.get("/labour/dispatch/render.json",{"id":id}).done(function (resp) {
+
+                if(resp.status=='success'){
+                    $("#worktypename").val(resp.data.name);
+                    $("#workprice").val(resp.data.price);
+                    var worknum=$("#worknum").val();
+                    $("#totalprice").val(resp.data.price*worknum);
+                }
+
+            }).error(function () {
+                layer.msg("服务器异常");
+            });
+        });
+
+        var uploader = WebUploader.create({
+            swf: "js/uploader/Uploader.swf",
+            server: "/file/upload",
+            pick: '#picker',
+            auto: true,
+            fileVal: 'file'
+        });
+
+        uploader.on("uploadSuccess", function (file, resp) {
+            layer.msg("上传成功");
+            var html = "<h5>" + resp.data.sourceName + "</h5>";
+            $("#fileList").append(html);
+
+            var json = {
+                newFileName: resp.data.newFileName,
+                sourceName: resp.data.sourceName
+            };
+            fileArray.push(json);
+        });
+
+        uploader.on("uploadError", function () {
+            layer.msg("服务器忙,请稍后");
+        });
+    });
+
+
+    var totalprice=0;
+    var percostprice=0;
+    var lastcostprice=0;
+
+    var app = new Vue({
+        el:"#app",
+        data: {
+            workArray:[]
+        },
+        methods: {
+            addWork:function(){
+                var id = $("#worktype").val();
+                //判断数组中是否存在当前的设备，如果有则数量累加，更新总价
+                var flag = false;
+                for(var i = 0;i < this.$data.workArray.length;i++) {
+                    var item = this.$data.workArray[i];
+                    if(item.id == id) {
+                        this.$data.workArray[i].num = parseInt(this.$data.workArray[i].num) + parseInt($("#worknum").val());
+                        this.$data.workArray[i].total = parseInt(this.$data.workArray[i].num) * parseInt($("#workprice").val());
+                        flag = true;
+                        totalprice+=parseInt(parseInt($("#workprice").val()));
+                        percostprice=totalprice*0.3;
+                        lastcostprice=totalprice*0.7;
+                        $("#brokerage").val(totalprice);
+                        $("#precost").val(percostprice);
+                        $("#lastcost").val(lastcostprice);
+                        break;
+                    }
+                }
+                //如果没有则添加新JSON对象
+                if(!flag) {
+                    var json = {};
+                    json.id = id;
+                    json.name = $("#worktypename").val();
+                    json.price = parseFloat($("#workprice").val());
+                    json.num = parseInt($("#worknum").val());
+                    json.totalprice = parseFloat(json.price) * parseFloat(json.num);
+
+                    this.$data.workArray.push(json);
+
+                    totalprice+=json.price*json.num;
+                    percostprice=totalprice*0.3;
+                    lastcostprice=totalprice*0.7;
+                    $("#brokerage").val(totalprice);
+                    $("#precost").val(percostprice);
+                    $("#lastcost").val(lastcostprice);
+                }
+
+
+
+            },
+            remove:(function (work) {
+                layer.confirm("确定要删除吗?",function (index) {
+                    totalprice-=work.num*work.price;
+                    percostprice=totalprice*0.3;
+                    lastcostprice=totalprice*0.7;
+                    $("#brokerage").val(totalprice);
+                    $("#precost").val(percostprice);
+                    $("#lastcost").val(lastcostprice);
+                    app.$data.workArray.splice(app.$data.workArray.indexOf(work),1);
+                    layer.close(index);
+                });
+            }),
+            saveRent:function(){
+                var json = {
+                    workArray : app.$data.workArray,
+                    fileArray : fileArray,
+                    companyName : $("#companyname").val(),
+                    tel : $("#tel").val(),
+                    companyTel:$("#companytel").val(),
+                    linkMan : $("#linkman").val(),
+                    cardNum : $("#cardnum").val(),
+                    address : $("#address").val(),
+                    brokerage:$("#brokerage").val(),
+                    preCost:$("#precost").val(),
+                    lastCost:$("#lastcost").val(),
+                };
+
+                //JSON.parse()
+                $.ajax({
+                    url:"/labour/dispatch/new",
+                    type:"post",
+                    data: JSON.stringify(json),
+                    contentType: "application/json;charset=UTF-8",
+                    success:function(data){
+                        if(data.status == 'success') {
+                            layer.confirm("保存成功",{btn:['继续添加','打印合同']},function(){
+                                window.history.go(0);
+                            },function(){
+                                window.location.href = "/labour/dispatch/rent/"+data.data;
+                            });
+                        } else {
+                            layer.msg(data.message);
+                        }
+                    },
+                    error:function(){
+                        layer.msg("服务器忙，请稍后");
+                    }
+                });
+
+            }
+        }
+
+    });
+
+
+</script>
 </body>
 </html>

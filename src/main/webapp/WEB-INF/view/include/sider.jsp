@@ -49,7 +49,7 @@
                         <i class="fa fa-circle-o"></i> <span>设备租赁</span></i>
                     </a>
                 </li>
-                <li class="treeview">
+                <li class="treeview ${param.menu == 'labour' ? 'active' : ''}">
                     <a href="/labour/dispatch">
                         <i class="fa fa-circle-o"></i> <span>劳务派遣</span></i>
                     </a>
