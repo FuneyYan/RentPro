@@ -44,18 +44,18 @@
 
             <li class="header">业务模块</li>
             <shiro:hasRole name="marketing">
-                <li class="treeview" ${param.menu == 'business_device_rent' ? 'active' : ''}>
+                <li class="treeview ${param.menu == 'device-rent' ? 'active' : ''}" >
                     <a href="/device/rent">
                         <i class="fa fa-circle-o"></i> <span>设备租赁</span></i>
                     </a>
                 </li>
                 <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-dashboard"></i> <span>劳务派遣</span></i>
+                    <a href="/labour/dispatch">
+                        <i class="fa fa-circle-o"></i> <span>劳务派遣</span></i>
                     </a>
                 </li>
-                <li class="treeview">
-                    <a href="#">
+                <li class="treeview ${param.menu == 'disk' ? 'active' : ''}">
+                    <a href="/netdisk">
                         <i class="fa fa-circle-o"></i> <span>网盘系统</span>
                     </a>
                 </li>
