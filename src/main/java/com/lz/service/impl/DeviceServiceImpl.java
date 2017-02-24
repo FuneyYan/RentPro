@@ -7,20 +7,21 @@ import com.lz.mapper.DeviceMapper;
 import com.lz.mapper.DeviceRentDetailMapper;
 import com.lz.mapper.DeviceRentDocMapper;
 import com.lz.mapper.DeviceRentMapper;
-import com.lz.pojo.Device;
-import com.lz.pojo.DeviceRent;
-import com.lz.pojo.DeviceRentDetail;
-import com.lz.pojo.DeviceRentDoc;
+import com.lz.pojo.*;
 import com.lz.service.DeviceService;
+import com.lz.service.FinanceService;
 import com.lz.util.SerialNumberUtil;
 import com.lz.util.ShiroUtil;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -37,6 +38,8 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceRentDetailMapper detailMapper;
     @Autowired
     private DeviceRentDocMapper docMapper;
+    @Autowired
+    private FinanceService financeService;
 
     @Value("${upload.path}")
     private String filePath;
@@ -114,7 +117,7 @@ public class DeviceServiceImpl implements DeviceService {
             rentDetail.setNum(bean.getNum());
             rentDetail.setRentid(deviceRent.getId());
 
-            total+=bean.getPrice();
+            total+=bean.getPrice()*bean.getNum();
             detailList.add(rentDetail);
         }
         if(!detailList.isEmpty()){
@@ -122,7 +125,7 @@ public class DeviceServiceImpl implements DeviceService {
             detailMapper.batchSave(detailList);
         }
 
-        total=total* deviceRent.getTotalday();
+        total=total* deviceRent.getTotalday().intValue();
         float precost=total*0.3F;
         float lastcost=total*0.7F;
         rentMapper.update(total,precost,lastcost,deviceRent.getId());
@@ -140,6 +143,22 @@ public class DeviceServiceImpl implements DeviceService {
         if(!rentDocList.isEmpty()){
             docMapper.batchSave(rentDocList);
         }
+
+//        写入财务报表
+        Finance finance=new Finance();
+        finance.setSerialnumber(SerialNumberUtil.getSerialNumber());
+        finance.setType(Finance.INCOME);//是收入还是支出
+        finance.setMoney(precost);//预付款或者尾款
+        finance.setState(Finance.PAY_NOT);//是否缴纳
+        finance.setModule(Finance.DEVICERENT_MODULE);//哪个模块(部门)
+        finance.setCreateuser(ShiroUtil.getCurrentUserName());
+        finance.setCreatedate(DateTime.now().toString("yyyy-MM-dd"));
+        finance.setConfirmuser(ShiroUtil.getCurrentUserName());
+        finance.setConfirmdate(DateTime.now().toString("yyyy-MM-dd"));
+        finance.setRemark(Finance.PRECOST);//备注,合同类型
+        finance.setRentserialnumber(deviceRent.getSerialnumber());
+        financeService.save(finance);
+
 
         return deviceRent.getSerialnumber();
     }

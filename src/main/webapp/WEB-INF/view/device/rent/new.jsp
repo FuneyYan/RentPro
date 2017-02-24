@@ -281,7 +281,7 @@
                     var item = this.$data.deviceArray[i];
                     if (item.id == id) {
                         this.$data.deviceArray[i].num = parseFloat(this.$data.deviceArray[i].num) + parseFloat($("#rentnum").val());
-                        this.$data.deviceArray[i].total = parseFloat(this.$data.deviceArray[i].num) * parseFloat($("#price").val());
+                        this.$data.deviceArray[i].total = parseFloat(this.$data.deviceArray[i].num) * parseFloat($("#price").val())*parseInt($("#totaldays").val());
                         flag = true;
                         break;
                     }

@@ -9,16 +9,6 @@
         <ul class="sidebar-menu">
             <shiro:hasRole name="manager">
                 <li class="header">设置模块</li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i
-                            class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="../../index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-                        <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
-                    </ul>
-                </li>
                 <li class="treeview ${fn:startsWith(param.menu,'sys_') ? 'active' : ''}">
                     <a href="#">
                         <i class="fa fa-cogs"></i> <span>系统设置</span> <i class="fa fa-angle-left pull-right"></i>
@@ -33,12 +23,23 @@
                     </ul>
                 </li>
             </shiro:hasRole>
-            <li class="header">财务模块</li>
             <shiro:hasRole name="finance">
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-dashboard"></i> <span>财务报表</span> <i class="fa fa-angle-left pull-right"></i>
+                <li class="header">财务模块</li>
+                <li class="treeview ${fn:startsWith(param.menu,'finance') ? 'active' : ''}">
+                    <a href="javascript:;">
+                        <i class="fa fa-circle-o"></i> <span>财务报表</span> <i class="fa fa-angle-left pull-right"></i>
                     </a>
+                    <ul class="treeview-menu">
+                        <li class="${param.menu == 'finance_day' ? 'active' : ''}">
+                            <a href="/finance/day"><i class="fa fa-circle-o"></i> 日报</a>
+                        </li>
+                        <li class="${param.menu == 'finance_month' ? 'active' : ''}">
+                            <a href="/finance/month"><i class="fa fa-circle-o"></i> 月报</a>
+                        </li>
+                        <li class="${param.menu=='finance_year' ? 'active' : ''}">
+                            <a href="/finance/year"><i class="fa fa-circle-o"></i> 年报</a>
+                        </li>
+                    </ul>
                 </li>
             </shiro:hasRole>
 

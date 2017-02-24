@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lz.mapper.FinanceMapper">
+
+    <select id="findFinanceByParam" resultType="Finance">
+
+        SELECT * FROM t_finance
+         <where>
+             <if test="day != null and day != ''">
+                 createdate = #{day}
+             </if>
+         </where>
+        ORDER BY confirmdate ASC ,createdate DESC limit ${start},${length}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT count(*) FROM t_finance
+    </select>
+
+    <select id="filterCount" resultType="java.lang.Long">
+        SELECT count(*) FROM t_finance WHERE createdate=#{day}
+    </select>
+
+    <select id="findFinanceById" resultType="Finance">
+        SELECT * FROM t_finance WHERE id=#{id}
+    </select>
+
+    <select id="findByCreateDate" resultType="Finance">
+        SELECT * FROM t_finance WHERE createdate=#{createdate}
+    </select>
+
+    <insert id="save">
+        INSERT INTO t_finance (serialnumber, type, money, state,
+        module, createdate, createuser,confirmuser,confirmdate, remark,rentserialnumber)
+        VALUES (#{serialnumber},#{type},#{money},#{state},
+        #{module},#{createdate},#{createuser},#{confirmuser},#{confirmdate},#{remark},#{rentserialnumber});
+    </insert>
+    <update id="update">
+        UPDATE t_finance SET state=#{state} WHERE id=#{id}
+    </update>
+</mapper>

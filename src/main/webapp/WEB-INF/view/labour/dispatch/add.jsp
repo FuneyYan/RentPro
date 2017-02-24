@@ -283,6 +283,7 @@
                     $("#brokerage").val(totalprice);
                     $("#precost").val(percostprice);
                     $("#lastcost").val(lastcostprice);
+                    this.$data.workArray[i].total = parseInt(this.$data.workArray[i].num) * parseInt($("#workprice").val());
                 }
 
 
