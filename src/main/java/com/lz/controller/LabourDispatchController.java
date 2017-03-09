@@ -1,5 +1,8 @@
 package com.lz.controller;
 
+import com.google.common.cache.CacheLoader;
+import com.google.common.collect.Maps;
+import com.lz.dto.DataTablesResult;
 import com.lz.dto.RenderJson;
 import com.lz.dto.WorkRentDto;
 import com.lz.exception.NotFoundException;
@@ -15,12 +18,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
 @Controller
@@ -34,6 +39,24 @@ public class LabourDispatchController {
     public String list() {
         return "labour/dispatch/list";
     }
+
+    @GetMapping("/load")
+    @ResponseBody
+    public DataTablesResult load(HttpServletRequest request) {
+        String draw = request.getParameter("draw");
+        String start = request.getParameter("start");
+        String length = request.getParameter("length");
+
+        Map<String,Object> queryParam = Maps.newHashMap();
+        queryParam.put("start",start);
+        queryParam.put("length",length);
+
+        List<WorkRent> deviceRentList = workService.findDeviceRentByQueryParam(queryParam);
+        Long count = workService.countOfDeviceRent();
+
+        return new DataTablesResult(draw,count,count,deviceRentList);
+    }
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/add")
     public String add(Model model) {
@@ -124,5 +147,12 @@ public class LabourDispatchController {
             ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
             workService.downloadZipFile(rent,zipOutputStream);
         }
+    }
+
+    @PostMapping("/state/change")
+    @ResponseBody
+    public RenderJson changeRentState(Integer id) {
+        workService.changeRentState(id);
+        return new RenderJson(RenderJson.SUCCESS);
     }
 }

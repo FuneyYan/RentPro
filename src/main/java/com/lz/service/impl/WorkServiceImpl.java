@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -180,6 +181,23 @@ public class WorkServiceImpl implements WorkService {
         zipOutputStream.closeEntry();
         zipOutputStream.flush();
         zipOutputStream.close();
+    }
+
+    @Override
+    public List<WorkRent> findDeviceRentByQueryParam(Map<String, Object> queryParam) {
+        return rentMapper.findDeviceRentByQueryParam(queryParam);
+    }
+
+    @Override
+    public Long countOfDeviceRent() {
+        return rentMapper.count();
+    }
+
+    @Override
+    public void changeRentState(Integer id) {
+        WorkRent rent=rentMapper.findById(id);
+        rent.setState("已完成");
+        rentMapper.changeRentState(rent);
     }
 
 

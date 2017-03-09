@@ -1,5 +1,7 @@
 package com.lz.pojo;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Administrator on 2017/2/22.
  */
@@ -13,6 +15,7 @@ public class WorkRent {
     private Float precost;
     private String companytel;
     private String cardnum;
+    private String createtime;
     private Float lastcost;
     private String serialnumber;
     private String state;
@@ -67,6 +70,14 @@ public class WorkRent {
 
     public Float getPrecost() {
         return precost;
+    }
+
+    public String getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
     }
 
     public void setPrecost(Float precost) {

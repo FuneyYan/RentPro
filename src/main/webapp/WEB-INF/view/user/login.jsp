@@ -6,9 +6,15 @@
     <meta charset="UTF-8">
     <title>登录</title>
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <style>
+        body{
+            background-image: url(/static/img/bg.jpg);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+<div class="container hold-transition login-pag">
+    <div class="col-md-5" style="background-color: #98a6ff">
         <c:if test="${not empty message}">
             <div class="alert alert-info">${message}</div>
         </c:if>
@@ -27,6 +33,7 @@
             </div>
         </form>
     </div>
+</div>
 
 </body>
 </html>

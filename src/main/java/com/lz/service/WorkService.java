@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
 public interface WorkService {
@@ -30,4 +31,10 @@ public interface WorkService {
     WorkRent findDeviceRentById(Integer id);
 
     void downloadZipFile(WorkRent rent, ZipOutputStream zipOutputStream) throws IOException;
+
+    List<WorkRent> findDeviceRentByQueryParam(Map<String, Object> queryParam);
+
+    Long countOfDeviceRent();
+
+    void changeRentState(Integer id);
 }

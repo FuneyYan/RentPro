@@ -13,11 +13,20 @@
         UPDATE t_workrent SET precost=#{preCost},
         lastcost=#{lastCost},totalprice=#{total} WHERE id=#{id}
     </update>
+    <update id="changeRentState">
+        UPDATE t_workrent SET state=#{state} WHERE id=#{id}
+    </update>
 
     <select id="findDeviceRentBySerialNumber" resultType="WorkRent">
         SELECT * FROM t_workrent WHERE serialnumber=#{serialNumber}
     </select>
     <select id="findById" resultType="WorkRent">
         SELECT * FROM t_workrent WHERE id=#{id}
+    </select>
+    <select id="findDeviceRentByQueryParam" resultType="WorkRent">
+        SELECT * FROM t_workrent limit ${start},${length}
+    </select>
+    <select id="count" resultType="java.lang.Long">
+        SELECT count(*) FROM t_workrent
     </select>
 </mapper>

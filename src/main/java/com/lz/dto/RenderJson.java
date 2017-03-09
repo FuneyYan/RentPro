@@ -8,12 +8,20 @@ public class RenderJson {
     private Object data;
     private String message;
 
-
+    /**
+     * 请求正确
+     * @param data 对象类型
+     */
     public RenderJson(Object data){
         this.data=data;
         this.status=SUCCESS;
     }
 
+    /**
+     * 请求失败
+     * @param status ERROR
+     * @param message 错误信息
+     */
     public RenderJson(String status,String message){
         this.status=status;
         this.message=message;

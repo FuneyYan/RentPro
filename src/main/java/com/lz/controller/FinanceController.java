@@ -102,15 +102,6 @@ public class FinanceController {
         for (int i = 1; i <=titleArr.length; i++) {
             row.createCell(i).setCellValue(titleArr[i-1]);
         }
-//        row.createCell(2).setCellValue("类型");
-//        row.createCell(3).setCellValue("金额");
-//        row.createCell(4).setCellValue("业务模块");
-//        row.createCell(5).setCellValue("业务流水号");
-//        row.createCell(6).setCellValue("状态");
-//        row.createCell(7).setCellValue("备注");
-//        row.createCell(8).setCellValue("创建人");
-//        row.createCell(9).setCellValue("确认人");
-//        row.createCell(10).setCellValue("确认日期");
 
         for (int i = 0; i < financeList.size(); i++) {
             Finance f=financeList.get(i);
@@ -137,5 +128,11 @@ public class FinanceController {
         workbook.write(outputStream);
         outputStream.flush();
         outputStream.close();
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/month")
+    public String month(Model model){
+
+        return "finance/month";
     }
 }

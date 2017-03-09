@@ -25,6 +25,7 @@ com\lz\mapper\DeviceRentMapper.class
 com\lz\util\Page.class
 com\lz\dto\WorkRentDto$WorkArrayBean.class
 com\lz\dto\RenderJson.class
+com\lz\dto\wx\User.class
 com\lz\dto\WorkRentDto$FileArrayBean.class
 com\lz\pojo\Finance.class
 com\lz\mapper\RoleMapper.class

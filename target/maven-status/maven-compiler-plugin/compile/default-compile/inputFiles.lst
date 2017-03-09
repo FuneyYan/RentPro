@@ -10,6 +10,7 @@ G:\Practice\Git\SSM\src\main\java\com\lz\dto\DataTablesResult.java
 G:\Practice\Git\SSM\src\main\java\com\lz\controller\UserController.java
 G:\Practice\Git\SSM\src\main\java\com\lz\mapper\DeviceRentDocMapper.java
 G:\Practice\Git\SSM\src\main\java\com\lz\service\FileService.java
+G:\Practice\Git\SSM\src\main\java\com\lz\dto\wx\User.java
 G:\Practice\Git\SSM\src\main\java\com\lz\util\Page.java
 G:\Practice\Git\SSM\src\main\java\com\lz\util\ShiroUtil.java
 G:\Practice\Git\SSM\src\main\java\com\lz\controller\SettingDeviceController.java
